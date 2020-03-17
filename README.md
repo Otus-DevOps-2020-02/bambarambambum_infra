@@ -1,3 +1,6 @@
+# bambarambambum_infra
+bambarambambum Infra repository
+
 #SSH to GCP host
 1. The way to connect in one command to the "little-1" host
 ssh -J mikh_androsov@35.242.221.114 mikh_androsov@little-1
