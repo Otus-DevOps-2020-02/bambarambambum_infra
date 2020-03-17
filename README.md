@@ -41,4 +41,4 @@ Servers
 Configuration file for OpenVPN: cloud-bastion.ovpn
 
 bastion_IP = 35.242.221.114
-little-1_IP = 10.156.0.3
+someinternalhost_IP = 10.156.0.3
