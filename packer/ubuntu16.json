@@ -1,14 +1,28 @@
 {
+    "variables": {
+        "my_project_id": "",
+        "my_source_image_family": "",
+        "my_machine_type": "",
+        "my_firewall_rule": ""
+      },
     "builders": [
         {
             "type": "googlecompute",
-            "project_id": "macro-market-271317",
+            "project_id": "{{user `my_project_id`}}",
             "image_name": "reddit-base-{{timestamp}}",
             "image_family": "reddit-base",
-            "source_image_family": "ubuntu-1604-lts",
+            "source_image_family": "{{user `my_source_image_family`}}",
             "zone": "europe-west1-b",
             "ssh_username": "mikh_androsov",
-            "machine_type": "f1-micro"
+            "machine_type": "{{user `my_machine_type`}}",
+            "disk_type": "pd-standart",
+            "disk_size": "10",
+            "network":"default",
+            "tags": {
+                "items": [
+                    "{{user `my_firewall_rule`}}"
+                ]
+            }
         }
     ],
     "provisioners": [
