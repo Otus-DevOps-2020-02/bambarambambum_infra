@@ -1,8 +1,6 @@
 {
-    "variables": {
-      "my_project_id": "{{env `projectus`}}",
-      "my_source_image_family": "{{env `ubuntu-38.10-lts`}}",
-      "my_machine_type": "{{env `high-perfomance inst`}}",
-      "my_firewall_rule": "{{env `very-good-rule`}}"
-    }
-  }
+      "my_project_id": "projectus",
+      "my_source_image_family": "ubuntu-38.10-lts",
+      "my_machine_type": "high-perfomance inst",
+      "my_firewall_rule": "very-good-rule"
+}
