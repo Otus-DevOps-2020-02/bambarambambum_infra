@@ -9,6 +9,7 @@
         {
             "type": "googlecompute",
             "project_id": "{{user `my_project_id`}}",
+            "image_description": "My test app image",
             "image_name": "reddit-base-{{timestamp}}",
             "image_family": "reddit-base",
             "source_image_family": "{{user `my_source_image_family`}}",
