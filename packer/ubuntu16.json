@@ -2,7 +2,8 @@
     "variables": {
         "my_project_id": "",
         "my_source_image_family": "",
-        "my_machine_type": ""
+        "my_machine_type": "",
+	"my_firewall_rule": ""
       },
     "builders": [
         {
