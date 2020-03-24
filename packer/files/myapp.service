@@ -1,0 +1,14 @@
+[Unit]
+Description=MyApp
+After=syslog.target
+After=network.target
+Requires=mongod.service
+
+[Service]
+Type=forking
+
+ExecStart=/home/mikh_androsov/reddit/start.sh
+ExecStop=/home/mikh_androsov/reddit/stop.sh
+
+[Install]
+WantedBy=multi-user.target

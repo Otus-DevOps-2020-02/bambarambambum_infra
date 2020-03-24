@@ -9,8 +9,8 @@
         {
             "type": "googlecompute",
             "project_id": "{{user `my_project_id`}}",
-            "image_name": "reddit-base-{{timestamp}}",
-            "image_family": "reddit-base",
+            "image_name": "reddit-full-{{timestamp}}",
+            "image_family": "reddit-full",
             "source_image_family": "{{user `my_source_image_family`}}",
             "zone": "europe-west1-b",
             "ssh_username": "mikh_androsov",
@@ -23,6 +23,21 @@
     ],
     "provisioners": [
         {
+            "type": "file",
+            "source": "./files/myapp.service",
+            "destination": "/home/mikh_androsov/myapp.service"
+        },
+        {
+            "type": "file",
+            "source": "./files/start.sh",
+            "destination": "/home/mikh_androsov/start.sh"
+        },
+        {
+            "type": "file",
+            "source": "./files/stop.sh",
+            "destination": "/home/mikh_androsov/stop.sh"
+        },
+        {
             "type": "shell",
             "script": "./scripts/install_ruby.sh",
             "execute_command": "sudo {{.Path}}"
@@ -31,6 +46,11 @@
             "type": "shell",
             "script": "./scripts/install_mongodb.sh",
             "execute_command": "sudo {{.Path}}"
+        },
+        {
+            "type": "shell",
+            "script": "./scripts/deploy.sh",
+            "execute_command": "{{.Path}}"
         }
     ]
 }
