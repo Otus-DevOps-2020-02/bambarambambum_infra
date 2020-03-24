@@ -22,20 +22,10 @@
             }
     ],
     "provisioners": [
-        {
+	{
             "type": "file",
             "source": "./files/myapp.service",
             "destination": "/home/mikh_androsov/myapp.service"
-        },
-        {
-            "type": "file",
-            "source": "./files/start.sh",
-            "destination": "/home/mikh_androsov/start.sh"
-        },
-        {
-            "type": "file",
-            "source": "./files/stop.sh",
-            "destination": "/home/mikh_androsov/stop.sh"
         },
         {
             "type": "shell",
