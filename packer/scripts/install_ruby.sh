@@ -1,8 +1,9 @@
 #!/bin/bash
 #Install Ruby and Bundler
+set -e
 echo "Start Install Ruby and Bundler"
-sudo apt update
-sudo apt install -y ruby-full ruby-bundler build-essential
+apt update
+apt install -y ruby-full ruby-bundler build-essential
 rubyver=$(ruby -v)
 bundlerver=$(bundler -v)
 echo "Ruby: $rubyver installed!"

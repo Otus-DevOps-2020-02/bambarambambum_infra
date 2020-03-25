@@ -1,0 +1,10 @@
+[Unit]
+Description=MyApp
+After=network.target
+After=mongod.service
+[Service]
+Type=simple
+WorkingDirectory=/home/mikh_androsov/reddit/
+ExecStart=/usr/local/bin/pumactl start
+[Install]
+WantedBy=multi-user.target
