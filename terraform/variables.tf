@@ -25,5 +25,5 @@ variable "public_key" {
 }
 variable "port_app" {
   description = "App port"
-  default = "9292"
+  default     = "9292"
 }

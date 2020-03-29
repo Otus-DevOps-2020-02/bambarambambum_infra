@@ -5,16 +5,16 @@ terraform {
 provider "google" {
   version = "2.15"
   project = var.project
-  region = var.region
+  region  = var.region
 }
 
 // My instansces
 resource "google_compute_instance" "app" {
-  count = 2
-  name = "reddit-app-${count.index}"
+  count        = 2
+  name         = "reddit-app-${count.index}"
   machine_type = "g1-small"
-  zone = var.zone
-  tags = ["reddit-app"]
+  zone         = var.zone
+  tags         = ["reddit-app"]
   boot_disk {
     initialize_params {
       image = var.disk_image
@@ -22,7 +22,7 @@ resource "google_compute_instance" "app" {
   }
   metadata = {
     ssh-keys = "mikh_androsov:${file(var.public_key_path)}"
-    }
+  }
 
   network_interface {
     network = "default"
@@ -30,31 +30,31 @@ resource "google_compute_instance" "app" {
   }
 
   connection {
-  type = "ssh"
-  host = self.network_interface[0].access_config[0].nat_ip
-  user = "mikh_androsov"
-  agent = false
-  private_key = file(var.private_key_path)
-}
-
-  provisioner "file" {
-source = "files/puma.service"
-destination = "/tmp/puma.service"
+    type        = "ssh"
+    host        = self.network_interface[0].access_config[0].nat_ip
+    user        = "mikh_androsov"
+    agent       = false
+    private_key = file(var.private_key_path)
   }
 
-provisioner "remote-exec" {
-script = "files/deploy.sh"
-}
+  provisioner "file" {
+    source      = "files/puma.service"
+    destination = "/tmp/puma.service"
+  }
+
+  provisioner "remote-exec" {
+    script = "files/deploy.sh"
+  }
 }
 resource "google_compute_firewall" "firewall_puma" {
-  name = "allow-puma-default"
+  name    = "allow-puma-default"
   network = "default"
   allow {
     protocol = "tcp"
-    ports = ["9292"]
+    ports    = ["9292"]
   }
   source_ranges = ["0.0.0.0/0"]
-  target_tags = ["reddit-app"]
+  target_tags   = ["reddit-app"]
 }
 
 // SSH Keys
@@ -75,8 +75,8 @@ resource "google_compute_http_health_check" "tcp-9292-connect" {
 
 // Resource pool
 resource "google_compute_target_pool" "app-pool" {
-  name             = "app-pool"
-  region           = var.region
+  name      = "app-pool"
+  region    = var.region
   instances = google_compute_instance.app.*.self_link
   health_checks = [
     google_compute_http_health_check.tcp-9292-connect.name
@@ -85,7 +85,7 @@ resource "google_compute_target_pool" "app-pool" {
 
 // Forwarding rule
 resource "google_compute_forwarding_rule" "lb" {
-  name                  = "app-pool-lb"
-  target                = google_compute_target_pool.app-pool.self_link
-  port_range            = "9292"
+  name       = "app-pool-lb"
+  target     = google_compute_target_pool.app-pool.self_link
+  port_range = "9292"
 }
