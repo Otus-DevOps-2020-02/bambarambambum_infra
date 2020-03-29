@@ -23,3 +23,7 @@ variable "public_key" {
   description = "Public Key in RSA"
   default     = ["mikh_androsov:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3ZGfEhcYLORqG4R8fYssFdXYmSOsw6HjM1rfqc9zS4golKhrCz+OXM0vQ3XCPraA+msD2N0MY88CI9m0LjkN1s+qY4AcEmcepeIg/IMqJXG/IdazVA7tDFD6/TMlgjXO9dDAkrDa/p/MuW113jHWkd89N+T5dGsirsRDnA7yDmJwJB+HFH//mY4ZUwNPqKJE0MilnSBLt+7rACe1jXFbNfrYMgXNoGWybUwnXDv8LusOHnO4+sDnVxy4NN6kKwHT6RDx4SYrGe0LsBwK5xY0ji5RM0jUq+NLTRcXeAOqP2zLfUM4wLn1+Js9vOYLjefQQdHqCPv8ygnyIWjAceLlX mikh_androsov"]
 }
+variable "port_app" {
+  description = "App port"
+  default = "9292"
+}

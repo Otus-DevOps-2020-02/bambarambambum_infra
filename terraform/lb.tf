@@ -10,7 +10,8 @@ provider "google" {
 
 // My instansces
 resource "google_compute_instance" "app" {
-  name = "reddit-app"
+  count = 2
+  name = "reddit-app-${count.index}"
   machine_type = "g1-small"
   zone = var.zone
   tags = ["reddit-app"]
@@ -33,19 +34,17 @@ resource "google_compute_instance" "app" {
   host = self.network_interface[0].access_config[0].nat_ip
   user = "mikh_androsov"
   agent = false
-  private_key = file(var.public_key_path)
+  private_key = file(var.private_key_path)
 }
 
   provisioner "file" {
-source = "../files/puma.service"
+source = "files/puma.service"
 destination = "/tmp/puma.service"
   }
 
 provisioner "remote-exec" {
-script = "../files/deploy.sh"
+script = "files/deploy.sh"
 }
-
-
 }
 resource "google_compute_firewall" "firewall_puma" {
   name = "allow-puma-default"
@@ -78,7 +77,7 @@ resource "google_compute_http_health_check" "tcp-9292-connect" {
 resource "google_compute_target_pool" "app-pool" {
   name             = "app-pool"
   region           = var.region
-  instances = ["europe-west1-b/reddit-app"]
+  instances = google_compute_instance.app.*.self_link
   health_checks = [
     google_compute_http_health_check.tcp-9292-connect.name
   ]
