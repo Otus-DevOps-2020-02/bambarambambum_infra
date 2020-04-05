@@ -7,6 +7,7 @@ module "app" {
   source          = "../modules/app"
   public_key_path = var.public_key_path
   zone            = var.zone
+  mongo_ip        = module.db.db_ip
   app_disk_image  = var.app_disk_image
 }
 
