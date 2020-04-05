@@ -1,2 +1,3 @@
 project         = "project"
 public_key_path = "~/.ssh/appuser.pub"
+mongo_ip = 1.1.1.1
