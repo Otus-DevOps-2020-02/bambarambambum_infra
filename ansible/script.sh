@@ -1,10 +1,6 @@
 #!/bin/bash
-gcloud compute instances list --format="value(name)" > file.txt
-readarray -t names < file.txt
-rm file.txt
-gcloud compute instances list --format="value(networkInterfaces[0].accessConfigs.natIP)" > file.txt
-readarray -t addrs < file.txt
-rm file.txt
+readarray -t names < ./data/names.txt
+readarray -t addrs < ./data/addrs.txt
 cat <<EOF
 {
 	"${names[0]}": {
