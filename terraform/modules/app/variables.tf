@@ -29,4 +29,4 @@ variable "port_app" {
   description = "Standart port app"
   default     = ["9292"]
 }
-variable "mongo_ip" {}
+variable "reddit-db" {}

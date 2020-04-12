@@ -1,0 +1,9 @@
+terraform {
+  backend "gcs" {
+    bucket = "my-homework7-test-bucket"
+    prefix = "prod"
+  }
+}
+#output "mongo_ip" {
+#  value = "${module.db.db_ip}"
+#}

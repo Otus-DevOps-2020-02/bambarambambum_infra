@@ -382,3 +382,97 @@ Now in the file ansible.cfg specify the path to the script
 [defaults]
 inventory = ./script.sh
 ```
+# HomeWork 9 - Ansible-2
+### Task 1
+For dynamic provisioning, I select the gcp_compute plugin.
+Why? I tried using this https://github.com/adammck/terraform-inventory and this https://github.com/express42/terraform-ansible-example/blob/master/ansible/terraform.py scripts. The first script returns empty values. The second script did not work for me.
+Let's start
+1) The GCP modules require both the requests and the google-auth libraries to be installed.
+```
+pip install requests google-auth
+```
+2) Now we need GCE JSON credentials. We generate them according to this instruction https://support.google.com/cloud/answer/6158849?hl=en&ref_topic=6262490#serviceaccounts
+3) Activate the plugin in ansible.cfg
+```
+[inventory]
+enable_plugins = gcp_compute
+```
+4) Now create the inventory file inventory.gcp.yml
+```
+plugin: gcp_compute
+projects:
+  - my_project_name
+keyed_groups: # group by name
+  - key: name
+hostnames: # get external IP
+  - public_ip
+filters: []
+auth_kind: serviceaccount # Creds
+service_account_file: /home/uadmin/project.json
+```
+5) Check how it's work
+```
+ansible-inventory -i inventory.gcp.yml --graph
+```
+```
+@all:
+  |--@_reddit_app:
+  |  |--35.210.47.157
+  |--@_reddit_db:
+  |  |--35.210.231.163
+  |--@ungrouped:
+  ```
+6) Change the hostname in the app.yml db.yml and deploy.yml files to those specified in the output (_reddit_app and _reddit_db)
+7) Check playbook
+ ```
+ansible-playbook --inventory-file=inventory.gcp.yml site.yml --check
+```
+```
+ PLAY RECAP *******************************************************************************************************
+35.210.231.163             : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+35.210.47.157              : ok=9    changed=7    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+8) Use playbook
+```
+ansible-playbook --inventory-file=inventory.gcp.yml site.yml
+```
+```
+PLAY RECAP *******************************************************************************************************
+35.210.231.163             : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+35.210.47.157              : ok=9    changed=7    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+### Task 2
+1) Build images
+```
+packer build var-file=./packer/variables.json ./packer/app.json
+...
+Build 'googlecompute' finished.
+```
+```
+packer build var-file=./packer/variables.json ./packer/db.json
+...
+Build 'googlecompute' finished.
+```
+2) Re-create terraform
+```
+terraform destroy
+```
+```
+terraform apply
+...
+Apply complete! Resources: 7 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+app = 35.210.209.113
+db = 35.206.137.133
+```
+3) Play playbook
+```
+ansible-playbook site.yml
+```
+```
+PLAY RECAP ********************************************************************************************************
+35.206.137.133             : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+35.210.209.113             : ok=9    changed=7    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
