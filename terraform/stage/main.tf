@@ -1,13 +1,13 @@
 provider "google" {
   version = "~> 2.15"
   project = var.project
-  region = var.region
+  region  = var.region
 }
 module "app" {
   source          = "../modules/app"
   public_key_path = var.public_key_path
   zone            = var.zone
-  mongo_ip        = module.db.db_ip
+  reddit-db        = module.db.reddit-db
   app_disk_image  = var.app_disk_image
 }
 
@@ -18,6 +18,6 @@ module "db" {
   db_disk_image   = var.db_disk_image
 }
 module "vpc" {
-  source          = "../modules/vpc"
+  source        = "../modules/vpc"
   source_ranges = ["0.0.0.0/0"]
 }

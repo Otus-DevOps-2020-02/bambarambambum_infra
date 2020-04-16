@@ -2,8 +2,44 @@ dist: trusty
 sudo: required
 language: bash
 before_install:
-- curl https://raw.githubusercontent.com/express42/otus-homeworks/2020-02/run.sh |
-  bash
+- curl https://raw.githubusercontent.com/express42/otus-homeworks/2020-02/run.sh | bash
+- sudo pip install ansible
+- sudo pip install ansible-lint
+- sudo curl https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+- curl -sLo /tmp/terraform.zip https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
+- unzip /tmp/terraform.zip -d /tmp
+- mv /tmp/terraform ~/bin
+- export PATH="~/bin:$PATH"
+- echo "deb https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+- curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+- sudo apt-get update
+- sudo apt-get install google-cloud-sdk --allow-unauthenticated
+script:
+- packer validate -var-file=packer/variables.json.example packer/app.json
+- packer validate -var-file=packer/variables.json.example packer/db.json
+- packer validate -var-file=packer/variables.json.example packer/ubuntu16.json
+- packer validate -var-file=packer/variables_full.json.example packer/immutable.json
+- cd terraform/stage
+- terraform init
+- terraform validate
+- tflint
+- tflint --module
+- cd ../prod
+- terraform init
+- terraform validate
+- tflint
+- tflint --module
+- cd ../..
+- ansible-lint ansible/playbooks/users.yml
+- ansible-lint ansible/playbooks/site.yml
+- ansible-lint ansible/playbooks/clone.yml
+- ansible-lint ansible/playbooks/app.yml
+- ansible-lint ansible/playbooks/db.yml
+- ansible-lint ansible/playbooks/deploy.yml
+- ansible-lint ansible/playbooks/packer_app.yml
+- ansible-lint ansible/playbooks/packer_db.yml
+- ansible-lint ansible/playbooks/reddit_app_multiple_plays.yml
+- ansible-lint ansible/playbooks/reddit_app_one_play.yml
 notifications:
   slack:
     rooms:
