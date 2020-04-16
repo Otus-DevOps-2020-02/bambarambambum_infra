@@ -476,3 +476,52 @@ PLAY RECAP *********************************************************************
 35.206.137.133             : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 35.210.209.113             : ok=9    changed=7    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
+# HomeWork 9 - Ansible-3
+### Task 1
+1) Declaring variables in stage and prod
+```
+db_host: 35.210.209.113
+port: 80
+server_name: reddit
+proxy_pass: http://35.210.47.157:9292
+```
+2) Call the role jdauphant.nginx with a minimum settings in the app.yml playbook
+```
+    roles:
+    - app
+    - role: jdauphant.nginx
+      nginx_sites:
+        default:
+        - listen {{ port }}
+        - server_name {{ server_name }}
+        - |
+          location / {
+             proxy_pass {{ proxy_pass }};
+          }
+```
+3) Run the playbook. If you run the test, it will crash with an error, because real changes do not occur, and some actions require the existence of files.
+```
+ansible-playbook playbooks/site.yml
+```
+```
+PLAY RECAP ********************************************************************************************************
+35.210.209.113             : ok=6    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+35.210.47.157              : ok=29   changed=19   unreachable=0    failed=0    skipped=17   rescued=0    ignored=0
+```
+### Task 2
+1) As in the previous homework, configure dynamic inventory using the gcp_compute plugin. Add an line to ansible.cfg
+```
+[inventory]
+enable_plugins = gcp_compute
+```
+2) We take the finished inventory.gcp.yml file and add it to the prod and stage folders
+3) Since our host groups will be called differently, it is necessary to rename the app and db files in group_vars folder to _reddit_app and to _reddit_db (prod and stage)
+4) In ansible.cfg specify the path to the inventory file
+```
+[defaults]
+inventory = ./environments/stage/inventory.gcp.yml
+```
+5) Now we can check
+```
+ansible-playbook playbooks/site.yml --check
+```

@@ -1,0 +1,16 @@
+---
+  - name: Configure App
+    hosts: _reddit_app
+    become: true
+
+    roles:
+    - app
+    - role: jdauphant.nginx
+      nginx_sites:
+        default:
+        - listen {{ port }}
+        - server_name {{ server_name }}
+        - |
+          location / {
+             proxy_pass {{ proxy_pass }};
+          }
