@@ -526,6 +526,6 @@ inventory = ./environments/stage/inventory.gcp.yml
 ansible-playbook playbooks/site.yml --check
 ```
 ### Task 3
-All checks can be found in the .travis.yml file. All checks were done using trytravis.
+All checks can be found in the .travis.yml file. All checks were done using trytravis..
 
 [![Build Status](https://travis-ci.com/bambarambambum/infra_trytravis.svg?branch=master)](https://travis-ci.com/bambarambambum/infra_trytravis)
