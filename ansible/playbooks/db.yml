@@ -4,4 +4,4 @@
     become: true
 
     roles:
-      - infra_roledb
+      - db
