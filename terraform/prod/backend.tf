@@ -1,6 +1,6 @@
-#terraform {
-#  backend "gcs" {
-#    bucket = "my-homework7-test-bucket"
-#    prefix = "prod"
-#  }
-#}
+terraform {
+  backend "gcs" {
+    bucket = "my-homework7-test-bucket"
+    prefix = "prod"
+  }
+}
