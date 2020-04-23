@@ -31,16 +31,16 @@ resource "google_compute_instance" "app" {
     agent       = false
     private_key = file(var.private_key_path)
   }
-  // Provision
-  provisioner "file" {
-    content      = templatefile("${path.module}/files/puma.tpl", {
-      mongo_ip = var.mongo_ip
-      })
-    destination = "/tmp/puma.service"
-  }
-  provisioner "remote-exec" {
-    script = "${path.module}/files/deploy.sh"
-  }
+#  // Provision
+#  provisioner "file" {
+#    content      = templatefile("${path.module}/files/puma.tpl", {
+#      reddit-db = var.reddit-db
+#      })
+#    destination = "/tmp/puma.service"
+#  }
+#  provisioner "remote-exec" {
+#    script = "${path.module}/files/deploy.sh"
+#  }
 }
 // Firewall rules
 resource "google_compute_firewall" "firewall_puma" {
