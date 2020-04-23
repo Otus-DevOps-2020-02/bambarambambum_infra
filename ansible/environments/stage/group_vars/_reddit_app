@@ -2,3 +2,4 @@ db_host: 35.210.209.113
 port: 80
 server_name: reddit
 proxy_pass: http://35.210.47.157:9292
+deploy_user: mikh_androsov

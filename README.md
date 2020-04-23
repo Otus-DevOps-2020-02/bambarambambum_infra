@@ -476,7 +476,7 @@ PLAY RECAP *********************************************************************
 35.206.137.133             : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 35.210.209.113             : ok=9    changed=7    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
-# HomeWork 9 - Ansible-3
+# HomeWork 10 - Ansible-3
 ### Task 1
 1) Declaring variables in stage and prod
 ```
@@ -529,3 +529,55 @@ ansible-playbook playbooks/site.yml --check
 All checks can be found in the .travis.yml file. All checks were done using trytravis..
 
 [![Build Status](https://travis-ci.com/bambarambambum/infra_trytravis.svg?branch=master)](https://travis-ci.com/bambarambambum/infra_trytravis)
+# HomeWork 11 - Ansible-4
+### Task 1
+1) To start nginx proxy, we must declare global variables in vagrantfile
+```
+ansible.extra_vars = {
+        "deploy_user" => "vagrant",
+        "port" => "80",
+        "server_name" => "reddit",
+        "proxy_pass" => "http://10.10.10.20:9292"
+      }
+```
+Or, we can declare local variables
+```
+"_reddit_app:vars" => {
+        "db_host" => "10.10.10.10",
+        "port" => "80",
+        "server_name" => "reddit",
+        "proxy_pass" => "http://10.10.10.20:9292"
+      }
+```
+2) We can check if the site works on port 80 using the command ```curl 10.10.10.20```
+### Task 2
+1) Test for the db role to verify that the db listening on the desired port (27017).
+```
+def test_socket_listening(host):
+    socket = host.socket('tcp://0.0.0.0:27017')
+    assert socket.is_listening
+```
+2) Change app.json
+```
+"provisioners": [
+        {
+            "type": "ansible",
+            "playbook_file": "ansible/playbooks/packer_app.yml",
+            "ansible_env_vars": ["ANSIBLE_ROLES_PATH={{ pwd }}/ansible/roles"],
+            "extra_arguments": ["--tags","ruby"]
+        }
+```
+3) Change db.json
+```
+"provisioners": [
+        {
+            "type": "ansible",
+            "playbook_file": "ansible/playbooks/packer_db.yml",
+            "ansible_env_vars": ["ANSIBLE_ROLES_PATH={{ pwd }}/ansible/roles"],
+            "extra_arguments": ["--tags","install"]
+        }
+    ]
+```
+### Task 3
+[![Build Status](https://travis-ci.com/bambarambambum/infra_roledb.svg?branch=master)](https://travis-ci.com/bambarambambum/infra_roledb)
+https://www.youtube.com/watch?v=HcfHBgUTn7I
