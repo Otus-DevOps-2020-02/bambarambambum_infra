@@ -24,22 +24,22 @@
     "provisioners": [
 	{
             "type": "file",
-            "source": "./files/myapp.service",
+            "source": "./packer/files/myapp.service",
             "destination": "/home/mikh_androsov/myapp.service"
         },
         {
             "type": "shell",
-            "script": "./scripts/install_ruby.sh",
+            "script": "./packer/scripts/install_ruby.sh",
             "execute_command": "sudo {{.Path}}"
         },
         {
             "type": "shell",
-            "script": "./scripts/install_mongodb.sh",
+            "script": "./packer/scripts/install_mongodb.sh",
             "execute_command": "sudo {{.Path}}"
         },
         {
             "type": "shell",
-            "script": "./scripts/deploy.sh",
+            "script": "./packer/scripts/deploy.sh",
             "execute_command": "{{.Path}}"
         }
     ]
