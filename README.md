@@ -337,3 +337,48 @@ Now we can apply the configuration
 terraform init
 terraform apply
 ```
+# HomeWork 8
+ ### Task 1
+ At the initial launch of the  ```ansible-playbook clone.yml ``` command, the repository was already cloned, which the ensemble reports to us about.
+After deleting the folder and re-executing the command, the module thinks that its action has changed something and writes changed = 1
+### Task 2
+Create an Inventory.json dynamic inventory file
+ ```
+{
+        "reddit-app": {
+                "hosts": ["35.210.209.113"]
+        },
+        "reddit-db": {
+                "hosts": ["35.210.47.157"]
+        }
+}
+  ```
+Now we need a script that will generate it
+```
+#!/bin/bash
+gcloud compute instances list --format="value(name)" > file.txt
+readarray -t names < file.txt
+rm file.txt
+gcloud compute instances list --format="value(networkInterfaces[0].accessConfigs.natIP)" > file.txt
+readarray -t addrs < file.txt
+rm file.txt
+cat <<EOF
+{
+        "${names[0]}": {
+                "hosts": ["${addrs[0]}"]
+        },
+        "${names[-1]}": {
+                "hosts": ["${addrs[-1]}"]
+        }
+}
+EOF
+```
+We check its work with the following command
+```
+ansible all -i script.sh -m ping
+```
+Now in the file ansible.cfg specify the path to the script
+```
+[defaults]
+inventory = ./script.sh
+```
